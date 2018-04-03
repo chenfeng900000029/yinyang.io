@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>div布局</title>
+	</head>
+	<style type="text/css">
+		.clearfix::after{
+		content:'';
+		display: block;
+		clear: both;
+		}
+		h1{  text-align: center;}
+		
+		.Module1{ width: 940px;
+		height: 100px;
+		margin: 0 auto;
+		border: solid 2px #000;
+		}
+		.Module1 span{ height: 100px;
+			width: 468px;
+			float: left; 
+			border: salmon 1px  solid;
+			display: block;
+			text-align: center;
+			line-height: 100px;}
+		
+		.Module2{ width: 300px;
+		height: 300px;
+		margin: 0 auto;
+		border: solid 2px #000;
+		position: relative;
+		}
+		.Module2 span{
+			height: 50px;
+			width: 50px;
+			display: block; 
+			position: absolute;
+			margin-top:125px;
+			margin-left: 125px;
+			line-height: 50px;
+			text-align: center;
+			border: 1px solid saddlebrown;}	
+			
+	</style>
+	<body>
+		<h1>左右布局+水平居中</h1>
+		<div class="Module1 clearfix">
+			<span >
+				左
+			</span>
+			<span>
+				右
+			</span>
+		</div>
+		
+		<h1>垂直居中</h1>
+		<div class="Module2 clearfix">
+			<span >
+				垂直
+			</span>
+		</div>
+	</body>
+</html>
