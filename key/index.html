@@ -2,73 +2,104 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>我是导航</title>
-		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/keys.css"/>
 	</head>
 	<body>
-		<header></header>
-		<main > 
-			<div class="kbox" id="kbdbox">
-				
-			</div>
-		</main>
-		<footer></footer>
-	</body>
-	<script type="text/javascript">
-		var keys={
-			0:['q','w','e','r','t','y','u','i','o','p'],
-			1:['a','s','d','f','g','h','j','k','l'],
-			2:['z','x','c','v','b','n','m'],
-			length:3
-			}
-		var hash={
-			q:'qq.com',
-			w:'weibo.com',
-			e:'ele.com',
-			r:'renren.com',
-			t:'tool.com',
-			y:'youdao.com',
-			u:'uc.com',
-			i:'iconfont.com',
-			o:'opra.com'
-		}
-		var hashInLocalStroage=JSON.parse(localStorage.getItem('zzz')||'null')
-		if(hashInLocalStroage){
-			hash=hashInLocalStroage
-		}
-		
-		
-		index=0
-		while(index < keys.length){
-		div1 = document.createElement('div')  //创建一个div标签  div1就是个容器
-		kbdbox.appendChild(div1)  			  //将div1放到kbdbox所在的标签内
-		index2=0
-		rows=keys[index]				//****** index？？？？
-			while(index2<rows.length){
-				kbdkeys= document.createElement('kbd')//创建一个kdb标签 并放到kbdkeys容器内
-				kbdkeys.textContent=rows[index2]
-				buton=document.createElement('button')
-				buton.textContent='编辑'
-				buton.id=rows[index2]
-				kbdkeys.appendChild(buton)
-				buton.onclick=function(monitor){
-					clickValue=monitor['target']['id']
-					insert=prompt('给我一个网址')
-					hash[clickValue]=insert					
-				}
-				div1.appendChild(kbdkeys)	//将存有kbd标签的kbdkeys放到div1标签内
-				
-				
-				index2=index2+1
-			}
-		index = index+1
-		}
-		document.onkeypress=function(monitor){
-			key=monitor['key']
-			website=hash[key]
-			console.log(website)
-			location.href='http://'+website
+	<header></header>
+	<main >
+		<div class="kbox" id="keybox">
 			
-		}
-	</script>
+		</div>
+	</main>
+	<footer></footer>
+		<script type="text/javascript">
+			//1.初始化数据
+			var keys={ 
+				0:['q','w','e','r','t','y','u','i','o','p'],
+				1:['a','s','d','f','g','h','j','k','l'],
+				2:['z','x','c','v','b','n','m'],
+				length:3
+			}
+			
+			var hash={
+				q:'qq.com',
+				w:'weibo.com',
+				e:'ele.com',
+				r:'renren.com',
+				t:'tianya.com',
+				y:'youdao.com',
+				i:'iqiyi.com',
+				o:'opera.com',
+				p:undefined,
+				a:'acfund.com',
+				s:'souhu.com',
+				m:'mcdonaalds.cn'
+			}
+			//取出localStroage中zzz对应的hash
+			var hashInlocalStroage=getFromLocalStroage('zzz')
+			if(hashInlocalStroage){
+				hash=hashInlocalStroage
+			}
+			function getFromLocalStroage(name){
+				return	JSON.parse(localStorage.getItem(name)||'null')
+			}
+			function tag(tagName){
+				return document.createElement(tagName)
+			}
+			//2.生成键盘
+			for(var index=0; index<keys.length; index=index+1){
+				var kbdiv=tag('div')
+				keybox.appendChild(kbdiv)
+				var row=keys[index]		 // index = 0 1 2   第一个数组  第二个数组 第三个数组
+									//	row.length  keys[index(0 1 2)].lenght
+				for(var index2=0;index2<row.length;index2=index2+1 )	{
+					var kbdbox=tag('kbd')
+					var span=tag('span')
+					span.textContent=row[index2] //keys[index] > keys[index][index2]+1
+					kbdbox.appendChild(span)
+					span.className='text'
+					kbdiv.appendChild(kbdbox)
+					var butt=tag('button')
+					butt.textContent='编辑'
+					butt.id=row[index2]	//对应target.id
+					imgsr=tag('img')
+					if(hash[row[index2]]){
+					imgsr.src='http://'+hash[row[index2]]+'/favicon.ico'
+					}else{
+						imgsr.src='//i.loli.net/2018/04/12/5acf630d54b10.png	'
+					}
+					imgsr.onerror=function(mgerror){
+						mgerror.target.src='//i.loli.net/2018/04/12/5acf630d54b10.png'
+						
+					}
+					
+					butt.onclick=function(buttClick){
+						var button2=buttClick['target']
+						var img2=button2.previousSibling
+						key=buttClick.target.id        //target 被点击的
+						var imp=prompt('给我一个网址')    //弹窗输入网址
+						hash[key]=imp	//hash[q] renren.com  更改了哈希里边的网址
+						img2.src='http://'+imp+'/favicon.ico'
+						img2.onerror=function(mgerror){
+						mgerror.target.src='//i.loli.net/2018/04/12/5acf630d54b10.png'
+						
+					}
+						localStorage.setItem('zzz',JSON.stringify(hash))
+						console.log(hash)
+					}
+					kbdbox.appendChild(imgsr)
+					kbdbox.appendChild(butt)
+				}
+				
+			}
+			//3.监听键盘
+			document.onkeypress=function(meClick){
+				key=meClick['key']  //meClick 中包含很多数据
+				website=hash[key]  //hash[key] 对应的网站 赋值给website
+				//location.href='http://'+website //locoation全局变量  当前地址栏的  href 地址栏的地址   
+				window.open('http://'+website,'_blank')  //新窗口打开
+			}
+		</script>
+	</body>
 </html>
